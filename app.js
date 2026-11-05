@@ -25,11 +25,29 @@ document.addEventListener('DOMContentLoaded', () => {
       introLoader.classList.add('fade-out');
       document.body.classList.remove('loading');
 
-      // Subtle GSAP entrance for the hero section
+      // Animación en cascada de las líneas del título (izquierda / derecha alternadas)
       if (window.gsap) {
-        gsap.from('.hero-headline', { opacity: 0, y: 30, duration: 1, ease: 'power3.out', delay: 0.2 });
-        gsap.from('.hero-subtext', { opacity: 0, y: 20, duration: 1, ease: 'power3.out', delay: 0.4 });
-        gsap.from('.cinema-frame', { opacity: 0, scale: 0.96, duration: 1.1, ease: 'power3.out', delay: 0.5 });
+        document.body.classList.add('gsap-active');
+        const tl = gsap.timeline({ delay: 0.1 });
+
+        // Estado inicial
+        gsap.set('.line-from-left', { x: -80, opacity: 0 });
+        gsap.set('.line-from-right', { x: 80, opacity: 0 });
+        gsap.set('.hero-subtext', { y: 20, opacity: 0 });
+        gsap.set('.hero-cinema-wrapper', { opacity: 0, y: 35 });
+
+        // 1. "El canal de" (sale de la izquierda)
+        tl.to('.line-1', { x: 0, opacity: 1, duration: 0.75, ease: 'power3.out' })
+          // 2. "streaming" (sale de la derecha)
+          .to('.line-2', { x: 0, opacity: 1, duration: 0.75, ease: 'power3.out' }, '-=0.5')
+          // 3. "donde vos" (sale de la izquierda)
+          .to('.line-3', { x: 0, opacity: 1, duration: 0.75, ease: 'power3.out' }, '-=0.5')
+          // 4. "elegís qué mirar." (ambas líneas juntas desde la derecha)
+          .to('.line-4', { x: 0, opacity: 1, duration: 0.8, ease: 'power3.out' }, '-=0.5')
+          // Subtítulo
+          .to('.hero-subtext', { y: 0, opacity: 1, duration: 0.65, ease: 'power2.out' }, '-=0.35')
+          // Cuadro de video bajado con espacio negro
+          .to('.hero-cinema-wrapper', { y: 0, opacity: 1, duration: 0.85, ease: 'power3.out' }, '-=0.4');
       }
 
       // Remove loader from DOM after transition
